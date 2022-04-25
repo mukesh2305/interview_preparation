@@ -1,0 +1,354 @@
+<script>
+
+    // count the how many number is repated more than one 
+    function count(arr) {
+        var a = [], b = [], prev;
+
+        arr.sort();
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] !== prev) {
+                a.push(arr[i]);
+                b.push(1);
+            } else {
+                b[b.length - 1]++;
+            }
+            prev = arr[i];
+        }
+
+        return [a, b];
+    }
+
+    const arr = [1, 1, 2, 3, 4, 4, 5, 6, 7, 8, 8, 9, 10];
+
+
+    // count the how many number is repated more than one 
+    function count(arrr) {
+        let a = [], b = [], prev;
+        arr.sort();
+        arr.forEach(e => {
+            if (e != prev) {
+                a.push(e);
+                b.push(1)
+            } else {
+                b[b.length - 1]++;
+            }
+
+            prev = e
+        })
+
+        return [a, b]
+    }
+    const arrr = [1, 1, 2, 3, 4, 4, 5, 6, 7, 8, 8, 9, 10];
+
+
+    console.log(count(arr))
+    console.log(count(arr)[1].filter(e => e > 1).length);
+    // count the duplicate number in the array
+    function countDuplicates(array) {
+        var counts = {};
+        array.forEach(function (x) {
+            counts[x] = (counts[x] || 0) + 1;
+        });
+        return counts;
+    }
+
+    const array = [1, 1, 2, 3, 4, 4, 5, 6, 7, 8, 8, 9, 10];
+    console.log(countDuplicates(array));
+
+    // count the duplicate number in the array using for loop
+    function countDuplicates(array) {
+        var counts = {};
+        for (var i = 0; i < array.length; i++) {
+            var num = array[i];
+            counts[num] = (counts[num] || 0) + 1;
+        }
+        return counts;
+    }
+
+    // using push and pop remove duplicate number from the array
+    function removeDuplicates(array) {
+        var newArray = [];
+        for (var i = 0; i < array.length; i++) {
+            if (newArray.indexOf(array[i]) == -1) {
+                newArray.push(array[i]);
+            }
+        }
+        return newArray;
+    }
+
+    [1, 1, 2, 3, 4, 4, 5, 6, 7, 8, 8, 9, 10];
+    console.log(removeDuplicates([1, 1, 2, 3, 4, 4, 5, 6, 7, 8, 8, 9, 10]))
+
+    // calculate max ------------------
+    // function highest(arr) {
+    //     let max = 0;
+    //     for (let i = 0; i < arr.length; i++) {
+    //             if(arr[i] > max) {
+    //                 max = arr[i];
+    //             }
+    //     }
+
+    //     return max;
+    // }
+    // console.log(highest(arr));
+
+
+    // remove duplicate character from string 
+    function removeDuplicate(str) {
+        let newStr = '';
+        for (let i = 0; i < str.length; i++) {
+            if (newStr.indexOf(str[i]) == -1) {
+                newStr += str[i];
+            }
+        }
+        return newStr;
+    }
+
+
+
+    // 50 javascript coding questions
+    // 1. Write a JavaScript program to check if a string starts with 'Java' and false otherwise.
+    function checkJava(str) {
+        if (str.startsWith('Java')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // 2. Write a JavaScript program to check if a string ends with 'Script'. The string length must be greater or equal to 6.
+    function checkScript(str) {
+        if (str.length >= 6 && str.endsWith('Script')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // 3. Write a JavaScript program to check if a string "Script" appears at the end of a string,
+    //    if the first character of the string is "S" and if the string length is greater or equal to 6.
+    function checkScript(str) {
+        if (str.length >= 6 && str.startsWith('S') && str.endsWith('Script')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // 4. Write a JavaScript program to find the largest of three given integers.
+    function largest(a, b, c) {
+        if (a > b && a > c) {
+            return a;
+        } else if (b > a && b > c) {
+            return b;
+        } else {
+            return c;
+        }
+    }
+
+    // 5. Write a JavaScript program to find the largest of three given integers.
+    function largest(num) {
+        return Math.max(...num);
+    }
+
+
+
+
+    // occurance of a word in a string
+    function occurance(str, word) {
+        let count = 0;
+        let index = str.indexOf(word);
+        while (index != -1) {
+            count++;
+            index = str.indexOf(word, index + 1);
+        }
+        return count;
+    }
+
+
+    console.log(occurance('The quick brown the fox jumps over the lazy dog', 'the'));
+
+
+
+    // make controller in node js 
+    // using agrigate function and in mongoose fetch data from user and product table 
+
+    exports.get('/', (req, res) => {
+        User.aggregate([
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: '_id',
+                    foreignField: 'userId',
+                    as: 'products'
+                }
+            }
+        ]).then(data => {
+            res.send(data);
+        }).catch(err => {
+            res.send(err);
+        });
+    });
+
+
+    exports.get('/', (req, res) => {
+        User.find({}).populate('products').then(data => {
+            res.send(data);
+        }).catch(err => {
+            res.send(err);
+        });
+    });
+
+    // agrigate method in mongoose between customer and product 
+
+    // popular agrigate method code from github using node js 
+
+    export const getPopularProducts = (req, res) => {
+        Product.aggregate([
+            {
+                $lookup: {
+                    from: 'customers',
+                    localField: '_id',
+                    foreignField: 'productId',
+                    as: 'customers'
+                }
+            },
+            {
+                $unwind: '$customers'
+            },
+            {
+                $group: {
+                    _id: '$_id',
+                    name: { $first: '$name' },
+                    price: { $first: '$price' },
+                    quantity: { $first: '$quantity' },
+                    totalQuantitySold: { $sum: '$customers.quantity' }
+                }
+            },
+            {
+                $sort: { totalQuantitySold: -1 }
+            }
+        ]).then(data => {
+            res.send(data);
+        }).catch(err => {
+            res.send(err);
+        });
+    };
+
+
+    const removeDuplicate = () => {
+        let newArray = [];
+        for (let i = 0; i < array.length; i++) {
+            if (newArray.indexOf(array[i]) == -1) {
+                newArray.push(array[i]);
+            }
+        }
+        return newArray;
+    };
+
+
+    // rest operator in javascript
+    function largest(num) {
+        // console.log(...num)
+        return Math.max(...num);
+    }
+
+    console.log(largest([4, 5, 6]))
+
+
+    // speard operator in javascript
+    function largest(...num) {
+        // console.log(...num)
+        return Math.max(...num);
+    }
+    console.log(largest(4, 5, 6))
+
+
+    //write  differnce between findone and find in mongoose
+    // find return array of object
+    // findone return object
+
+
+    // example of findone and find in mongoodb 
+
+    const findOne = () => {
+        User.findOne({ name: 'John' }).then(data => {
+            console.log(data);
+        }).catch(err => {
+            console.log(err);
+        });
+    };
+
+
+    const find = () => {
+        User.find({ name: 'John' }).then(data => {
+            console.log(data);
+        }).catch(err => {
+            console.log(err);
+        });
+    };
+
+    // middleware in node js to assign permission to admin , superadmin, manager and user  using role has permission table 
+
+    const userHasPermission = (req, res, next) => {
+        // if user is not superadmin then assign read and write permission 
+        if (req.user.role !== 'superadmin') {
+            req.user.permissions = ['read', 'write'];
+        } else {
+            req.user.permissions = ['read', 'write', 'delete'];
+        }
+    }
+
+    // authorization in node js middleware
+
+    export const isAuthorized = (req, res, next) => {
+        if (req.user.permissions.includes(req.params.permission)) {
+            next();
+        } else {
+            res.status(403).send('Access Denied');
+        }
+    };
+
+
+    export const isAuthenticated = (req, res, next) => {
+        if (req.isAuthenticated()) {
+            next();
+        } else {
+            res.redirect('/login');
+        }
+    };
+
+    // palindrome in javascript without using regex
+
+    function palindrome(str) {
+
+        if (str === str.split("").reverse().join("")) {
+            console.log("yes")
+        }
+
+        else {
+            console.log("no")
+
+        }
+
+    }
+
+    //   without using reverse function palindrome in javascript
+
+    function palindrome(str) {
+        let temp = str;
+        str = str.split("");
+        let hii = ""
+        for (let i = str.length - 1; i >= 0; i--) {
+            hii = hii + str[i];
+
+        }
+        hii === temp ? console.log("palindrome") : console.log("not")
+    }
+
+    let str = "mukkum"
+    palindrome(str)
+
+
+
+</script>
