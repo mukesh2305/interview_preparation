@@ -1,6 +1,73 @@
 <script>
 
+    ///////////////////////// start ------sprad and rest opeator //////////////////////////////////////////////////////////////////
+    // 1. Copying an array:
+    const val1 = [1, 2, 3];
+    const val2 = [...val1];
+    console.log(val2); // Output: [1, 2, 3]
+
+    // 2 : Merging arrays:
+    const val12 = [1, 2, 3];
+    const val13 = [4, 5, 6];
+    const val14 = [...val12, ...val13];
+    console.log(val14); // Output: [1, 2, 3, 4, 5, 6]
+
+    // 3 : Spreading a string:
+    const str1 = 'hello';
+    const letters = [...str1];
+    console.log(letters); // Output: ['h', 'e', 'l', 'l', 'o']
+
+    // 4 : creating new object
+    const obj1 = { x: 1, y: 2 };
+    const obj2 = { ...obj1, z: 3 };
+    console.log(obj2); // Output: { x: 1, y: 2, z: 3 }
+
+    /////////////// rest operator //////////////////////
+    // 1 : Using rest operator to accept any number of arguments:
+    function sum(...numbers) {
+        let result = 0;
+        for (let number of numbers) {
+            result += number;
+        }
+        return result;
+    }
+    console.log(sum(1, 2, 3)); // Output: 6
+    console.log(sum(1, 2, 3, 4, 5)); // Output: 15
+
+    // 2 : Rest parameter must be last formal parameter:
+    function printValues(a, b, ...rest) {
+        console.log(a);
+        console.log(b);
+        console.log(rest);
+    }
+    printValues(1, 2, 3, 4, 5); // Output: 1, 2, [3, 4, 5]
+
+
+
+
+
+    ///////////////////////// end   -------sprad and rest opeator //////////////////////////////////////////////////////////////////
+
     // count the how many number is repated more than one 
+    // use Map 
+    const arr1 = [1, 1, 4, 2, 3, 4, 5, 6, 7, 8, 8, 9, 10];
+
+    const freq = new Map();
+    arr1.map(num => {
+        if (freq.has(num)) {
+            freq.set(num, freq.get(num) + 1);
+        } else {
+            freq.set(num, 1);
+        }
+    })
+    // console.log(freq)
+
+    freq.forEach((value, key) => {
+        console.log(key, "-", value);
+    })
+
+    ////////////////////////////////////////////////////////////////////////////////////////
+
     function count(arr) {
         var a = [], b = [], prev;
 
@@ -44,14 +111,23 @@
     console.log(count(arr))
     console.log(count(arr)[1].filter(e => e > 1).length);
     // count the duplicate number in the array
+    // function countDuplicates(array) {
+    //     var counts = {};
+    //     array.forEach(function (x) {
+    //         counts[x] = (counts[x] || 0) + 1;
+    //     });
+    //     return counts;
+    // }
+
     function countDuplicates(array) {
         var counts = {};
         array.forEach(function (x) {
-            counts[x] = (counts[x] || 0) + 1;
+            // counts[x] = (counts[x] || 0) + 1;
+            counts[x] = counts[x] ? counts[x] + 1 : 1;
+            // both are appropiate
         });
         return counts;
     }
-
     const array = [1, 1, 2, 3, 4, 4, 5, 6, 7, 8, 8, 9, 10];
     console.log(countDuplicates(array));
 
@@ -76,10 +152,29 @@
         return newArray;
     }
 
+
     [1, 1, 2, 3, 4, 4, 5, 6, 7, 8, 8, 9, 10];
     console.log(removeDuplicates([1, 1, 2, 3, 4, 4, 5, 6, 7, 8, 8, 9, 10]))
+    // rmeove duplicates
+    const arrVal = [1, 1, 4, 2, 3, 4, 5, 6, 7, 8, 8, 9, 10];
+
+    let na = [];
+    arrVal.forEach(e => {
+        if (na.indexOf(e) == -1) {
+            na.push(e);
+        }
+    })
+
+    na.sort((a, b) => a - b); // sort the array 
+    console.log(a);
+
+
 
     // calculate max ------------------
+    const maxArr = [1, 1, 4, 2, 3, 4, 5, 6, 7, 8, 8, 9, 10];
+    console.log(Math.max(...maxArr));
+
+
     // function highest(arr) {
     //     let max = 0;
     //     for (let i = 0; i < arr.length; i++) {
@@ -170,6 +265,8 @@
 
 
 
+
+
     // make controller in node js 
     // using agrigate function and in mongoose fetch data from user and product table 
 
@@ -246,7 +343,6 @@
         return newArray;
     };
 
-
     // rest operator in javascript
     function largest(num) {
         // console.log(...num)
@@ -257,9 +353,9 @@
 
 
     // speard operator in javascript
-    function largest(...num) {
+    function largest(...num) { // rest operator 
         // console.log(...num)
-        return Math.max(...num);
+        return Math.max(...num); // sprade operator 
     }
     console.log(largest(4, 5, 6))
 

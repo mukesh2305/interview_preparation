@@ -1,9 +1,9 @@
 
 
 // Hooks ----------------------------------
-Hooks are a new addition in React 16.8.
- They let you use state and other React features 
- without writing a class.
+// Hooks are a new addition in React 16.8.
+//  They let you use state and other React features 
+//  without writing a class.
 
 // ------------------------------------------------------------------
 import { useRef, useState, useEffect } from "react";
@@ -23,7 +23,7 @@ export default function Stopwatch() {
 
   useEffect(() => {
     return () => clearInterval(value);
-  }, []);
+  }, [value]);
 
   return (
     <div>

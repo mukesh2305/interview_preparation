@@ -2,29 +2,29 @@
 
     // if one err then , callback hell problem generated 
     //  callback function ---------------------------------------------
-    first(2, function(firstValue, err) {
-        if(!err) {
-            second(firstValue, function(secondValue, err){
-        if(!err){
-            third(secondValue, function(thirdValue, err){
-                if(!err){
-                    console.log(thirdValue);
+    first(2, function (firstValue, err) {
+        if (!err) {
+            second(firstValue, function (secondValue, err) {
+                if (!err) {
+                    third(secondValue, function (thirdValue, err) {
+                        if (!err) {
+                            console.log(thirdValue);
+                        }
+                    });
                 }
-            });
-        }
             })
         }
     })
 
-    function first(value , callback) {
+    function first(value, callback) {
         callback(value + 1, false);
     }
 
-    function second (value , callback) {
+    function second(value, callback) {
         callback(value + 1, false);
     }
 
-    function third(value , callback) {
+    function third(value, callback) {
         callback(value + 1, false);
     }
 
@@ -36,13 +36,13 @@
 
     promise.then(first).then(second).then(third).then(response => console.log(response));
 
-    function first(value  ) {
+    function first(value) {
         return value + 1;
     }
-    function second (value  ) {
+    function second(value) {
         return value + 1;
     }
-    function third(value  ) {
+    function third(value) {
         return value + 1;
     }
 
@@ -51,7 +51,7 @@
 
     let p = new Promise((resolve, reject) => {
         let a = 1 + 2;
-        if(a == 2) {
+        if (a == 2) {
             resolve('Success');
         } else {
             reject('Failed');
@@ -89,7 +89,7 @@
 
 
     // syncronous code ---------------------------------------------------------
-    
+
     console.log(" I ")
     console.log(" am ")
     console.log(" syncronous ")
@@ -123,54 +123,56 @@
         console.log("useMemo");
         return parseInt(inputValue1) + parseInt(inputValue2);
     }, [inputValue1, inputValue2]);
-    
+
     // useCallback()
+    const func = function () { return 5; }
     const sampleFunc = useCallback(() => {
-        console.log("inputValue1", inputValue1, "inputValue2", inputValue2);
+        return func;
     }, [inputValue1, inputValue2]);
 
 
 
-// settTimout example ------------------------------------------------------------------
-async function values () {
-console.log("I")
-console.log("am")
-await new Promise((resolve, reject) => setTimeout(resolve,300))
-.then(() => console.log("eating"));
-console.log("this")
-}
+    // settTimout example ------------------------------------------------------------------
+    async function values() {
+        console.log("I")
+        console.log("am")
+        await new Promise((resolve, reject) => setTimeout(resolve, 300))
+            .then(() => console.log("eating"));
+        console.log("this")
+    }
 
-values()
+    values()
 
-// setTimeout example ------------------------------------------------------------------
-async function values () {
-console.log("I")
-console.log("am")
-await console.log("eating");
-console.log("this")
-}
-values()
+    // setTimeout example ------------------------------------------------------------------
+    async function values() {
+        console.log("I")
+        console.log("am")
+        await console.log("eating");
+        console.log("this")
+    }
+    values()
 
-// setTimeout example ----------------------------------------------
-console.log("I")
-console.log("am")
- new Promise((resolve, reject) => setTimeout(resolve(console.log("eating")),300))
+    // setTimeout example ----------------------------------------------
+    console.log("I")
+    console.log("am")
+    // promise will wait when set Timeoue is completed than it will response back
+    new Promise((resolve, reject) => setTimeout(resolve(console.log("eating")), 300))
 
-console.log("this")
+    console.log("this")
 
 
-// console.log("I")
-// console.log("am")
-// setTimeout(async () => {
-//   await console.log("eating")
-// }, 3000)
+    // console.log("I")
+    // console.log("am")
+    // setTimeout(async () => {
+    //   await console.log("eating")
+    // }, 3000)
 
-// console.log("this")
+    // console.log("this")
 
-// ---------------------------------------------------------------------------------
-// 1 > Yarn vs NPM ---------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------
+    // 1 > Yarn vs NPM ---------------------------------------------------------------------
 
-// Yarn ---------------------------------------------------------------------------------
+    // Yarn ---------------------------------------------------------------------------------
 
     //  yarn install dependency using yarn add commnd
 
@@ -181,7 +183,7 @@ console.log("this")
     // installing dependencies automatically create a lock file that keeps track of the dependencies.
 
 
-// NPM ---------------------------------------------------------------------------------
+    // NPM ---------------------------------------------------------------------------------
     // NPM installs dependencies using the npm install command.
     //  The dependencies are installed sequentially, one after another.
 
@@ -191,281 +193,283 @@ console.log("this")
 
 
 
-// update or modify monogodb upsert method in user table
+    // update or modify monogodb upsert method in user table
 
-module.exports = {
-    // update or modify monogodb upsert method in product collection
+    module.exports = {
+        // update or modify monogodb upsert method in product collection
 
-    productUpsert : () => {
+        productUpsert: () => {
+            return new Promise((resolve, reject) => {
+                Product.findOneAndUpdate(
+                    { _id: productId },
+                    { $set: { name: productName, price: productPrice, description: productDescription, image: productImage } },
+                    { upsert: true },
+                    (err, product) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(product);
+                        }
+                    }
+                )
+            })
+        },
+    }
+
+    // agrigation in mongoose ---------------------------------------------------------------
+    // mongosb product table and user table agigation
+
+    module.exports = () => {
         return new Promise((resolve, reject) => {
-            Product.findOneAndUpdate(
-                {_id: productId},
-                {$set: {name: productName, price: productPrice, description: productDescription, image: productImage}},
-                {upsert: true}, 
-                (err, product) => {
-                if(err) {
-                    reject(err);
-                } else {
-                    resolve(product);
-                }
-                }
-            )
-        })
-    },
-}
-
-// agrigation in mongoose ---------------------------------------------------------------
-// mongosb product table and user table agigation
-
-module.exports = () => {
-    return new Promise((resolve, reject) => {
-        Product.aggregate([
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'userId',
-                    foreignField: '_id',
-                    as: 'user'
-                }
-            },
-            {
-                $unwind: '$user'
-            },
-            {
-                $match: {
-                    user: {
-                        $ne: null
+            Product.aggregate([
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'userId',
+                        foreignField: '_id',
+                        as: 'user'
+                    }
+                },
+                {
+                    $unwind: '$user'
+                },
+                {
+                    $match: {
+                        user: {
+                            $ne: null
+                        }
+                    }
+                },
+                {
+                    $group: {
+                        _id: '$user._id',
+                        products: {
+                            $push: '$$ROOT'
+                        }
                     }
                 }
+            ], (err, products) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(products);
+                }
+            })
+        })
+    }
+
+
+
+    // simple agrigation moongoose example ---------------------------------------------------
+
+    module.exports = async () => {
+
+        // customer table agrigation
+
+        const customers = await Customer.aggregate([
+            {
+                $lookup: {
+                    from: 'orders',
+                    localField: '_id',
+                    foreignField: 'customerId',
+                    as: 'orders'
+                }
+            },
+            {
+                $unwind: '$orders'
             },
             {
                 $group: {
-                    _id: '$user._id',
-                    products: {
-                        $push: '$$ROOT'
+                    _id: '$_id',
+                    orders: {
+                        $push: '$orders'
                     }
                 }
             }
-        ], (err, products) => {
-            if(err) {
-                reject(err);
-            } else {
-                resolve(products);
-            }
-        })
-    })
-}
+        ])
+    }
 
 
- 
-// simple agrigation moongoose example ---------------------------------------------------
+    // mongodb raw query for agrigation --------------------------------------------------------
 
-module.exports =async  () => {
-
-    // customer table agrigation
-
-    const customers = await Customer.aggregate([
+    db.orders.aggregate([
         {
             $lookup: {
-                from: 'orders',
-                localField: '_id',
-                foreignField: 'customerId',
-                as: 'orders'
+                from: 'customers',
+                localField: 'customerId',
+                foreignField: '_id',
+                as: 'customer'
             }
         },
         {
-            $unwind: '$orders'
+            $unwind: '$customer'
         },
         {
             $group: {
-                _id: '$_id',
+                _id: '$customer._id',
                 orders: {
-                    $push: '$orders'
+                    $push: '$$ROOT'
                 }
             }
         }
     ])
-}
+
+    // purchase_order table // money spent by customer 
+    db.purchase_order.aggregate([
+        { $match: {} },
+        { $group: { _id: "$customer", total: { $sum: "$total" } } },
+        { $sort: { total: -1 } }
+    ])
+
+    // money spent on product
+
+    db.purchase_order.aggregate([
+        { $match: {} },
+        { $group: { _id: "$product", total: { $sum: "$total" } } },
+        { $sort: { total: -1 } }
+
+    ])
+
+    // filter using customer 
+
+    db.purchase_order.aggregate([
+        { $match: { customer: { $in: ['Mike', "Karen"] } } },
+        { $group: { _id: "$product", total: { $sum: "$total" } } },
+        { $sort: { total: -1 } }
+    ])
+
+    // inventory table and orders table 
+
+    // we can use aggregate method with project to get values that we want 
+    // example : if we want to get the 3 values from the 5 value than we get from the table using proejct and aggregate
 
 
-// mongodb raw query for agrigation --------------------------------------------------------
+    db.inventory.aggregate([
+        // if we does not define 0 than id always give in the result because it is unique value
+        { $project: { _id: 0, product: 1, price: 1, quantity: 1 } },
+    ])
 
-db.orders.aggregate([
-    {
-        $lookup: {
-            from: 'customers',
-            localField: 'customerId',
-            foreignField: '_id',
-            as: 'customer'
-        }
-    },
-    {
-        $unwind: '$customer'
-    },
-    {
-        $group: {
-            _id: '$customer._id',
-            orders: {
-                $push: '$$ROOT'
+
+    db.inventory.aggregate([
+        // it also give the same result as above one
+        { $project: { _id: 0, stock: 0 } },
+    ])
+
+    // it alos give the same result as above one
+    db.inventory.find({}, { _id: 0, stock: 0 })
+    db.inventory.find({}, { product: 1, price: 1, quantity: 1 })
+
+
+    // Lookups ---------------------------------------------------------------------------------
+
+    db.inventory.aggregate([
+        { $match: { $item: "computer" } },
+        {
+            $lookup: {
+                from: "orders",
+                localField: "item",
+                foreignField: "item",
+                as: "order_details"
             }
+        },
+    ])
+
+    // $lookup is used to join two collections.
+
+
+
+
+    // promise error handling ---------------------------------------------------------------
+    //  1> outside the promise throw Error then handle using try catch  
+    function getUserById(id) {
+        if (typeof id !== 'number' || id <= 0) {
+            throw new Error('Invalid id argument');
         }
-    }
-])
 
-// purchase_order table // money spent by customer 
-db.purchase_order.aggregate([
-    {$match : {}}, 
-    {$group : {_id : "$customer", total : {$sum : "$total"}}},
-    {$sort : {total : -1}}
-])
-
-// money spent on product
-
-db.purchase_order.aggregate([
-    {$match : {}}, 
-    {$group : {_id : "$product", total : {$sum : "$total"}}} , 
-    {$sort : {total : -1}}
-
-])
-
-// filter using customer 
-
-db.purchase_order.aggregate ([
-    {$match : {customer : {$in : ['Mike', "Karen"]}}}, 
-    {$group : {_id : "$product", total : {$sum : "$total"}}} , 
-    {$sort : {total : -1}}
-])
-
-// inventory table and orders table 
-
-// we can use aggregate method with project to get values that we want 
-// example : if we want to get the 3 values from the 5 value than we get from the table using proejct and aggregate
-
-
-db.inventory.aggregate([
-    // if we does not define 0 than id always give in the result because it is unique value
-    {$project : {_id : 0, product : 1, price : 1, quantity : 1}},
-]) 
-
-
-db.inventory.aggregate([
-    // it also give the same result as above one
-    {$project : {_id : 0,stock : 0}},
-])
-
-// it alos give the same result as above one
-db.inventory.find({}, {_id : 0, stock : 0})
-db.inventory.find({}, {product: 1, price: 1, quantity: 1})
-
-
-// Lookups ---------------------------------------------------------------------------------
-
-db.inventory.aggregate([
-    {$match : {$item : "computer"}}, 
-    {$lookup : {
-        from : "orders", 
-        localField : "item",
-        foreignField : "item",
-        as : "order_details"
-    }},
-])
-
-// $lookup is used to join two collections.
-
-
-
-
-// promise error handling ---------------------------------------------------------------
-//  1> outside the promise throw Error then handle using try catch  
-function getUserById(id) {
-    if (typeof id !== 'number' || id <= 0) {
-        throw new Error('Invalid id argument');
-    }
-
-    return new Promise((resolve, reject) => {
-        resolve({
-            id: id,
-            username: 'admin'
+        return new Promise((resolve, reject) => {
+            resolve({
+                id: id,
+                username: 'admin'
+            });
         });
-    });
-}
-
-try {
-  
-setUserById('a')
-    .then(user => console.log(user.username))
-    .catch(err => console.log("this is new >>>>>>>>>", err));
-} catch (error) {
-  console.log("error r+++++++++++++++", error)
-}
-
-// 2>  inside the promise throw Error then handle catch -----------------------------------------------------
-
-let authorized = false;
-
-function getUserById(id) {
-
-    return new Promise((resolve, reject) => {
-
-        if (!authorized) {
-        throw new Error('Invalid id argument');
     }
 
-        resolve({
-            id: id,
-            username: 'admin'
+    try {
+
+        setUserById('a')
+            .then(user => console.log(user.username))
+            .catch(err => console.log("this is new >>>>>>>>>", err));
+    } catch (error) {
+        console.log("error r+++++++++++++++", error)
+    }
+
+    // 2>  inside the promise throw Error then handle catch -----------------------------------------------------
+
+    let authorized = false;
+
+    function getUserById(id) {
+
+        return new Promise((resolve, reject) => {
+
+            if (!authorized) {
+                throw new Error('Invalid id argument');
+            }
+
+            resolve({
+                id: id,
+                username: 'admin'
+            });
         });
-    });
-}
+    }
 
-try {
-getUserById(10)
-    .then(user => console.log(user.username))
-    .catch(err => console.log("this is new >>>>>>>>>", err));
-} catch (error) {
-  console.log("error r+++++++++++++++", error)
-}
-
-
-// async await using json placeholder api 
-async function apis() {
-  console.log("this is first")
-  
-  await value()
-console.log("new")
-}
-
-  function value() {
-    
-  console.log("this is new")
-  }
-  
-apis()
-console.log("last")
+    try {
+        getUserById(10)
+            .then(user => console.log(user.username))
+            .catch(err => console.log("this is new >>>>>>>>>", err));
+    } catch (error) {
+        console.log("error r+++++++++++++++", error)
+    }
 
 
-// new tricky related to refrence 
-const obj = {
-  a : 2
-}
+    // async await using json placeholder api 
+    async function apis() {
+        console.log("this is first")
 
-let obj2 = obj;
-obj2.a = 3;
-console.log(obj2)
-console.log(obj)
+        await value()
+        console.log("new")
+    }
+
+    function value() {
+
+        console.log("this is new")
+    }
+
+    apis()
+    console.log("last")
 
 
-//   do same problem without refrence
-{
-let obj = {
-  a : 2
-}
-let obj2 = {...obj};
-obj2.a = 3;
-console.log(obj2)
-console.log(obj)
-}
- 
+    // new tricky related to refrence 
+    const obj = {
+        a: 2
+    }
+
+    let obj2 = obj;
+    obj2.a = 3;
+    console.log(obj2)
+    console.log(obj)
+
+
+    //   do same problem without refrence
+    {
+        let obj = {
+            a: 2
+        }
+        let obj2 = { ...obj };
+        obj2.a = 3;
+        console.log(obj2)
+        console.log(obj)
+    }
+
 
 
 

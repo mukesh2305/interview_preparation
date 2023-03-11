@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // Debouncing --> LINK ::--> https://www.youtube.com/watch?v=6EDhZHsRY4k&ab_channel=WhattheJavaScript
+
+        /* 1 : Encapsulation:
+        def : Encapsulation is the concept of hiding the implementation details of an object and  exposing 
+              only relevant information to the outside world.in javscript we can achieve excapsulation 
+              using closures.
+        */
+        // For example, let's create a Person class with a private property for the age.
+
+        class Person {
+            constructor(name, age) {
+                this.name = age;
+                let _age = age;
+            }
+        }
+        class Person {
+            constructor(name, age) {
+                this.name = name;
+                let _age = age; // this us private variable
+
+                this.getAge = function () {
+                    return _age;
+                }
+
+                this.setAge = function (newAge) {
+                    _age = newAge;
+                }
+            }
+
+            sayHello() {
+                console.log(`Hello, my name is ${this.name}, and I'm ${this.getAge()} years old`);
+            }
+        }
+
+        /*  const person = new Person("mukesh", 23);
+            person.sayHello();
+
+            person.setAge(30);
+            person.sayHello();
+        */
+        /* 2 : Inheritance:
+           def : Inheritance is the concept of creating a new class from an existing class by inheriting 
+            its properties and methods. In JavaScript, we can achieve inheritance using the extends keyword.
+        */
+        // For example, let's create a Student class that inherits from the Person class.
+
+        class Student extends Person {
+            constructor(name, age, grade) {
+                super(name, age); // calling parent constructor
+                this.grade = grade;
+            }
+
+            study() {
+                console.log(`${this.name} is studying in the grade ${this.grade}`);
+            }
+        }
+
+        const student = new Student("mukesh", 23, 12);
+        student.sayHello();
+        student.study();
+
+        /* 3 Polymorphism:
+            Polymorphism is the concept of using a single interface to represent multiple types.
+             In JavaScript, we can achieve polymorphism using function overloading and overriding.
+        */
+
+        class Shape {
+            constructor() { }
+
+            calculateArea() {
+                console.log('Shape : cannot calculate area');
+            }
+        }
+
+        class ReactAngle extends Shape {
+            constructor(length, width) {
+                super();
+                this.length = length;
+                this.width = width;
+            }
+
+            calculateArea() {
+                return this.length * this.width;
+            }
+        }
+
+        class Circle extends Shape {
+            constructor(radius) {
+                super();
+                this.radius = radius;
+            }
+
+            calculateArea() {
+                return Math.PI * Math.pow(this.radius, 2);
+            }
+        }
+
+        const ractangle = new ReactAngle(5, 3);
+        console.log(`ReactAngle area : ${ractangle.calculateArea()}`);
+    </script>
+</body>
+
+</html>

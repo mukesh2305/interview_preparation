@@ -148,7 +148,7 @@ Promise.all([p1, p2, p3]).then(response => console.log(response));
 // async await ---------------------------------------------------------------------
 async function value() {
   console.log("I");
-  await console.log("am");
+  console.log("am");
   console.log("this");
 }
 value();

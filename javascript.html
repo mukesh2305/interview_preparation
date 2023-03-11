@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #parent {
+            background-color: aqua;
+        }
+
+        #parent1 {
+            background-color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- immutable -- pass By Value
+
+        undefined, Boolean, Number, String, BigInt, Symbol, null
+        mutable -- pass By Refrence
+        Object, Array, Map, Set, Date, Function, Almost Everything Made with new Keyword
+    -->
+    <!-- 
+        - We only need to attach one event listener to the parent element, which reduces the amount of code we need to write.
+        - We can handle events on dynamically created child elements without having to attach a new event listener to each one.
+        - It can improve performance, especially for large lists, since there are fewer event listeners to execute. 
+    -->
+    <h3>1. Event Delegation</h3>
+    <ul id="parent">
+        <li>Item 1</li>
+        <li>Item 2</li>
+        <li>Item 3</li>
+    </ul>
+
+    <!-- 
+        Event bubbling is a mechanism in which an event is first captured by the innermost element and
+        then propagated to its outer ancestors. In other words, when an event occurs on an element, 
+        it first triggers the event listeners attached to the element itself, 
+        then to its parent element, and so on, until it reaches the top-level element. 
+    -->
+    <h3>2. Event Bubbling</h3>
+    <div id="parent1">
+        <div id="child">
+            Click me
+        </div>
+    </div>
+
+    <script>
+        // 1 ------> Event Delegation
+        const parent = document.querySelector('#parent');
+
+        parent.addEventListener('click', function (event) {
+            if (event.target.tagName === 'LI') {
+                console.log(event.target.textContent);
+            }
+        });
+
+        // 2 -------> Event Bubbling
+        const parent1 = document.querySelector('#parent1');
+        const child = document.querySelector('#child');
+
+
+        parent1.addEventListener('click', function (event) {
+            console.log('parent1 clicked');
+        });
+        child.addEventListener('click', function (event) {
+            console.log('child clicked');
+        });
+
+        // 3 --------> life cycle method in the React
+        /*
+            1. componentDidMount
+            2. componentDidUpdate
+            3. componentWillUnount
+        */
+
+        // 4 --------> pure components ++ higherOrder component
+        /*
+            1. pure components       --> dum components like card, Buton -- here data pas through props
+            2. higherOrder component -->  has bussiness logic -- form with logic, routerView with logic
+        */
+
+        // 5 --------> state vs Props vs Ref
+        /*
+            1. state : variable object when we update than it will update on the Ui
+            2. Props : data pass from parent to child
+            3. Ref : ref is used for taking refrence of dom element so it will render after that we can do operations on it
+            like using useRef hook
+        */
+
+        // 6 ----> call multiple Apis symantaniously -> for this we need Promise.all
+        // 1. Promise.all -> if one api fails and give Error , than whole Promise.all failse and give Error
+        const api1 = fetch('https://api.example.com/data1');
+        const api2 = fetch('https://api.example.com/data2');
+
+        Promise.all([api1, api2])
+            .then((responses) => {
+                // Handle successful responses
+                console.log('All API calls successful');
+                console.log('Response 1:', responses[0]);
+                console.log('Response 1:', responses[1]);
+            })
+            .catch((error) => {
+                // Handle error
+                console.error('An error occurred while making API calls:', error);
+            });
+
+        // 1. Promise.allSettled -> if one api fails and give Error , then whole Promise not Falis it just failed apis that is failed
+        Promise.allSettled([api1, api2])
+            .then((responses) => {
+                // Handle successful responses
+                console.log('All API calls successful');
+                console.log('Response 1:', responses[0]);
+                console.log('Response 1:', responses[1]);
+            })
+            .catch((error) => {
+                // Handle error
+                console.error('An error occurred while making API calls:', error);
+            });
+
+
+
+
+
+        //////////////////////// MONGODB Group By ////////////////////////////////////////////
+        db.sales.insertMany([
+            { "_id": 1, "item": "abc", "price": NumberDecimal("10"), "quantity": NumberInt("2"), "date": ISODate("2014-03-01T08:00:00Z") },
+            { "_id": 2, "item": "jkl", "price": NumberDecimal("20"), "quantity": NumberInt("1"), "date": ISODate("2014-03-01T09:00:00Z") },
+            { "_id": 3, "item": "xyz", "price": NumberDecimal("5"), "quantity": NumberInt("10"), "date": ISODate("2014-03-15T09:00:00Z") },
+            { "_id": 4, "item": "xyz", "price": NumberDecimal("5"), "quantity": NumberInt("20"), "date": ISODate("2014-04-04T11:21:39.736Z") },
+            { "_id": 5, "item": "abc", "price": NumberDecimal("10"), "quantity": NumberInt("10"), "date": ISODate("2014-04-04T21:23:13.331Z") },
+            { "_id": 6, "item": "def", "price": NumberDecimal("7.5"), "quantity": NumberInt("5"), "date": ISODate("2015-06-04T05:08:13Z") },
+            { "_id": 7, "item": "def", "price": NumberDecimal("7.5"), "quantity": NumberInt("10"), "date": ISODate("2015-09-10T08:43:00Z") },
+            { "_id": 8, "item": "abc", "price": NumberDecimal("10"), "quantity": NumberInt("5"), "date": ISODate("2016-02-06T20:20:13Z") },
+        ])
+        //    1 : 
+        db.sales.aggregate([{ $group: { _id: "$item" } }])
+        // The operation returns the following result:
+        let data = [ // output
+            { "_id": "abc" },
+            { "_id": "jkl" },
+            { "_id": "def" },
+            { "_id": "xyz" },
+        ]
+
+        // 2 :
+        db.sales.aggregate(
+            [
+                // First Stage
+                {
+                    $group:
+                    {
+                        _id: "$item",
+                        totalSaleAmount: { $sum: { $multiply: ["$price", "$quantity"] } }
+                    }
+                },
+                // Second Stage
+                {
+                    $match: { "totalSaleAmount": { $gte: 100 } }
+                }
+            ]
+        )
+
+        let data1 = [ //  output
+            { "_id": "abc", "totalSaleAmount": NumberDecimal("170") },
+            { "_id": "xyz", "totalSaleAmount": NumberDecimal("150") },
+            { "_id": "def", "totalSaleAmount": NumberDecimal("112.5") }
+        ]
+
+    </script>
+</body>
+
+</html>
